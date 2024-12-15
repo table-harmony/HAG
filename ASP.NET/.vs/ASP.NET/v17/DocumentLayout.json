@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\server\\encoder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|solutionrelative:server\\encoder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Encoder.cs",
+              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Encoder.cs",
+              "RelativeDocumentMoniker": "Server\\Encoder.cs",
+              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Encoder.cs",
+              "RelativeToolTip": "Server\\Encoder.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T17:20:01.201Z",
+              "EditorCaption": ""
             }
           ]
         }
