@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}|ConsoleApp\\ConsoleApp.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\consoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}|ConsoleApp\\ConsoleApp.csproj|solutionrelative:consoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\server\\encoder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|solutionrelative:server\\encoder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -23,12 +27,25 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ConsoleApp\\Program.cs",
+              "RelativeDocumentMoniker": "ConsoleApp\\Program.cs",
+              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ConsoleApp\\Program.cs",
+              "RelativeToolTip": "ConsoleApp\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-15T17:38:08.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Encoder.cs",
               "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Encoder.cs",
               "RelativeDocumentMoniker": "Server\\Encoder.cs",
               "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Encoder.cs",
               "RelativeToolTip": "Server\\Encoder.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAcwAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIUAAAAAAAAAAAAiwIgAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-15T17:20:01.201Z",
               "EditorCaption": ""

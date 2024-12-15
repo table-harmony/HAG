@@ -30,6 +30,27 @@ namespace Server {
             return !(a == b);
         }
 
+        public int GetCode() {
+            return Red * 3 + Green * 5 + Blue * 7;
+        }
+
+        public static Pixel operator -(Pixel? a, Pixel? b) {
+            if (a is null && b is null)
+                return new Pixel();
+
+            if (a is null && b is not null)
+                return b;
+
+            if (b is null && a is not null)
+                return a;
+
+            return new Pixel {
+                Red = Math.Abs(a.Red - b.Red),
+                Green = Math.Abs(a.Green - b.Green),
+                Blue = Math.Abs(a.Blue - b.Blue)
+            };
+        }
+
         public override string ToString() {
             return $"Red: {Red}, Green: {Green}, Blue: {Blue}";
         }
@@ -66,6 +87,7 @@ namespace Server {
 
         public static byte[] Main(byte[] data) {
             List<byte> resultBytes = [];
+            Pixel[] uniquePixels = new Pixel[64];
 
             resultBytes.AddRange(data.Take(HEADER_SIZE));
 
@@ -105,6 +127,49 @@ namespace Server {
                 } else {
                     if (copyCount != 0)
                         copyCount = 0;
+                    
+                    // SET CASE
+                    int currentPixelCode = currentPixel.GetCode() % 64;
+                    if (uniquePixels[currentPixelCode] != null) {
+                        resultBytes.Add((byte)(HAG_SET | currentPixelCode));
+                        prevPixel = currentPixel;
+                        continue;
+                    } else {
+                        uniquePixels[currentPixelCode] = currentPixel;
+                    }
+
+                    Pixel deltaPixel = currentPixel - prevPixel;
+
+                    // DELTA CASE
+                    if (Math.Abs(deltaPixel.Red) < 4 &&
+                        Math.Abs(deltaPixel.Green) < 4 &&
+                        Math.Abs(deltaPixel.Blue) < 4) {
+                        resultBytes.Add((byte)(
+                            (HAG_DELTA << 6) |
+                            (deltaPixel.Red << 4) |
+                            (deltaPixel.Green << 2) |
+                            deltaPixel.Blue
+                        ));
+                    } 
+                    // BIG DELTA CASE
+                    else if (Math.Abs(deltaPixel.Red) < 64 &&
+                        Math.Abs(deltaPixel.Green) < 32 &&
+                        Math.Abs(deltaPixel.Blue) < 32) {
+                        resultBytes.Add((byte)(
+                            (HAG_BIG_DELTA << 6) | 
+                            deltaPixel.Red
+                        ));
+                        resultBytes.Add((byte)(
+                            (deltaPixel.Green << 4)
+                            | deltaPixel.Blue
+                        ));
+                    } 
+                    else {
+                        resultBytes.Add(HAG_RGB);
+                        resultBytes.Add(data[byteIndex]);
+                        resultBytes.Add(data[byteIndex + 1]);
+                        resultBytes.Add(data[byteIndex + 2]);
+                    }
                 }
 
                 prevPixel = currentPixel;
