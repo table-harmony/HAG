@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\server\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|solutionrelative:server\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\server\\algorithm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}|Server\\Server.csproj|solutionrelative:server\\algorithm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,14 +23,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Class1.cs",
-              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Class1.cs",
-              "RelativeDocumentMoniker": "Server\\Class1.cs",
-              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Class1.cs",
-              "RelativeToolTip": "Server\\Class1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "Algorithm.cs",
+              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Algorithm.cs",
+              "RelativeDocumentMoniker": "Server\\Algorithm.cs",
+              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\Server\\Algorithm.cs",
+              "RelativeToolTip": "Server\\Algorithm.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-14T18:18:58.246Z",
+              "WhenOpened": "2024-12-14T18:25:26.575Z",
               "EditorCaption": ""
             }
           ]
