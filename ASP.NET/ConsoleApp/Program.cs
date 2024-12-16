@@ -1,5 +1,4 @@
-﻿
-using Server;
+﻿using Server.x;
 
 byte[] data = [
     // Width (2 in big-endian)
@@ -17,8 +16,10 @@ byte[] data = [
     0x00, 0x00, 0xFF, // Blue
     0x01, 0x01, 0xFF, // Blue
     0xFF, 0xFF, 0xFF,  // White,
+    0xFF, 0xFF, 0xFF,  // White,
 ];
 
 Encoder.Main(data)
+    .Take(1)
     .ToList()
     .ForEach(element => Console.WriteLine($"byte: {element}"));

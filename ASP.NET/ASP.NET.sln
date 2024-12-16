@@ -5,12 +5,14 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA5E4C2F-A12B-484F-BF12-69E93AF15C13}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageProcessing", "ImageProcessing\ImageProcessing.csproj", "{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
