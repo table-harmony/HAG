@@ -6,7 +6,7 @@ public class Pixel {
     public int Red { get; set; } = 0;
     public int Green { get; set; } = 0;
     public int Blue { get; set; } = 0;
-    public int Alpha { get; set; } = 0;
+    public int Alpha { get; set; } = 255;
 
     public override bool Equals(object? obj) {
         if (obj is not Pixel other)

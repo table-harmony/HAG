@@ -4,14 +4,14 @@ using ImageProcessing.Core;
 
 namespace ImageProcessing.Serializers;
 
-public class PngSerializer : ISerializer {
+public class JpegSerializer : ISerializer {
     public Sif Serialize(Stream source) {
-        using var image = Image.Load<Rgba32>(source);
+        using var image = Image.Load<Rgb24>(source);
         var result = new Sif {
             Header = new ImageHeader {
                 Width = image.Width,
                 Height = image.Height,
-                Format = ColorFormat.RGBA,
+                Format = ColorFormat.RGB,
             },
             Body = new ImageBody()
         };
@@ -25,7 +25,6 @@ public class PngSerializer : ISerializer {
                     Red = color.R,
                     Green = color.G,
                     Blue = color.B,
-                    Alpha = color.A
                 });
             }
         }
@@ -35,7 +34,7 @@ public class PngSerializer : ISerializer {
     }
 
     public Stream Deserialize(Sif source) {
-        using var image = new Image<Rgba32>(source.Header.Width, source.Header.Height);
+        using var image = new Image<Rgb24>(source.Header.Width, source.Header.Height);
         var pixelArray = source.Body.Pixels.ToArray();
         int index = 0;
 
@@ -45,17 +44,16 @@ public class PngSerializer : ISerializer {
                     break;
 
                 var pixel = pixelArray[index++];
-                image[x, y] = new Rgba32(
+                image[x, y] = new Rgb24(
                     (byte)pixel.Red,
                     (byte)pixel.Green,
-                    (byte)pixel.Blue,
-                    (byte)pixel.Alpha
+                    (byte)pixel.Blue
                 );
             }
         }
 
         var stream = new MemoryStream();
-        image.SaveAsPng(stream);
+        image.SaveAsJpeg(stream);
         stream.Position = 0;
 
         return stream;

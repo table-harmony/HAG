@@ -4,18 +4,16 @@ using ImageProcessing.Services;
 namespace ImageProcessing.Serializers;
 
 public class HagSerializer : ISerializer {
-    private readonly HagCodec codec = new();
-
     public Sif Serialize(Stream source) {
         var buffer = new byte[source.Length];
         source.Read(buffer, 0, (int)source.Length);
         var hag = new Hag(buffer);
 
-        return codec.Decode(hag);
+        return HagCodec.Decode(hag);
     }
 
     public Stream Deserialize(Sif source) {
-        var hag = codec.Encode(source);
+        var hag = HagCodec.Encode(source);
         var stream = new MemoryStream();
 
         var widthBytes = BitConverter.GetBytes(hag.Header.Width).Reverse().ToArray();

@@ -1,11 +1,13 @@
-﻿namespace ImageProcessing.Serializers;
+﻿using System.Net.NetworkInformation;
+
+namespace ImageProcessing.Serializers;
 
 public class SerializerFactory {
-    public ISerializer Create(SupportedImageFormats format) {
+    public static ISerializer Create(SupportedImageFormats format) {
         return format switch {
             SupportedImageFormats.Png => new PngSerializer(),
             SupportedImageFormats.Hag => new HagSerializer(),
-            SupportedImageFormats.Jpeg => new PngSerializer(),
+            SupportedImageFormats.Jpeg => new JpegSerializer(),
             _ => throw new ArgumentException($"Unsupported format: {format}")
         };
     }

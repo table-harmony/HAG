@@ -1,18 +1,28 @@
 ﻿using ImageProcessing.Services;
-using ImageProcessing.Serializers;
 
-ImageConverter converter = new();
+if (args.Length < 2) {
+    Console.WriteLine("Usage: program <input-file> <output-format>");
+    Console.WriteLine("Example: program image.png jpg");
+    return;
+}
 
-converter.Convert(
-    "C:\\Users\\liron\\Downloads\\1531344.png",
-    "C:\\Users\\liron\\Downloads\\output.hag",
-    SupportedImageFormats.Png,
-    SupportedImageFormats.Hag
-);
+string inputPath = args[0];
+string targetFormat = args[1].ToLowerInvariant();
 
-converter.Convert(
-    "C:\\Users\\liron\\Downloads\\output.hag",
-    "C:\\Users\\liron\\Downloads\\output2.png",
-    SupportedImageFormats.Hag,
-    SupportedImageFormats.Png
-);
+if (!File.Exists(inputPath)) {
+    Console.WriteLine($"Input file not found: {inputPath}");
+    return;
+}
+
+try {
+    var outputFormat = ImageConverter.GetFormatFromExtension($"dummy.{targetFormat}");
+
+    string outputPath = ImageConverter.Convert(
+        inputPath,
+        outputFormat
+    );
+
+    Console.WriteLine($"Successfully converted {inputPath} to {outputPath}");
+} catch (Exception ex) {
+    Console.WriteLine($"Error: {ex.Message}");
+}
