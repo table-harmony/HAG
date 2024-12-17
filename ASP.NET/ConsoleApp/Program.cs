@@ -1,25 +1,18 @@
-﻿using Server.x;
+﻿using ImageProcessing.Services;
+using ImageProcessing.Serializers;
 
-byte[] data = [
-    // Width (2 in big-endian)
-    0x00, 0x00, 0x00, 0x02,
-    // Height (2 in big-endian)
-    0x00, 0x00, 0x00, 0x02,
-    // Pixel Data (RGB format)
-    0xFF, 0xFF, 0xFF,  // White,
-    0xFF, 0x00, 0x00, // Red
-    0xFF, 0x00, 0x00, // Red
-    0xFF, 0x00, 0x00, // Red
-    0xFF, 0x00, 0x00, // Red
-    0x00, 0xFF, 0x00, // Green
-    0xFF, 0x00, 0x00, // Red
-    0x00, 0x00, 0xFF, // Blue
-    0x01, 0x01, 0xFF, // Blue
-    0xFF, 0xFF, 0xFF,  // White,
-    0xFF, 0xFF, 0xFF,  // White,
-];
+ImageConverter converter = new();
 
-Encoder.Main(data)
-    .Take(1)
-    .ToList()
-    .ForEach(element => Console.WriteLine($"byte: {element}"));
+converter.Convert(
+    "C:\\Users\\liron\\Downloads\\1531344.png",
+    "C:\\Users\\liron\\Downloads\\output.hag",
+    SupportedImageFormats.Png,
+    SupportedImageFormats.Hag
+);
+
+converter.Convert(
+    "C:\\Users\\liron\\Downloads\\output.hag",
+    "C:\\Users\\liron\\Downloads\\output2.png",
+    SupportedImageFormats.Hag,
+    SupportedImageFormats.Png
+);

@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA5E4C2F-A12B-484F-BF12-69E93AF15C13}"
@@ -20,10 +18,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{796B417C-A4AF-434C-9ECB-FBE2CB96D09C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -2,14 +2,14 @@
 
 namespace ImageProcessing.Serializers;
 
-public interface ISerializer<T> {
+public interface ISerializer {
     /// <summary>
     /// Converts a specific image format to a standardized SerializedImage
     /// </summary>
-    Sif Deserialize(T source);
+    Sif Serialize(Stream source);
 
     /// <summary>
     /// Converts a SerializedImage back to a specific image format
     /// </summary>
-    T Serialize(Sif source);
+    Stream Deserialize(Sif source);
 }
