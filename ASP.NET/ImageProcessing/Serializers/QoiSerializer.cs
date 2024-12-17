@@ -4,7 +4,7 @@ using ImageProcessing.Core;
 
 namespace ImageProcessing.Serializers;
 
-public class PngSerializer : ISerializer {
+public class QoiSerializer : ISerializer {
     public Sif Serialize(Stream source) {
         using var image = Image.Load<Rgba32>(source);
         var result = new Sif {
@@ -55,8 +55,8 @@ public class PngSerializer : ISerializer {
         }
 
         var stream = new MemoryStream();
-        image.SaveAsPng(stream);
-        
+        image.SaveAsWebp(stream);
+
         stream.Position = 0;
 
         return stream;

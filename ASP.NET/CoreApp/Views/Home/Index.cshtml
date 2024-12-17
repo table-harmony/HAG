@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Harmony Converter";
+}
+
+<div class="container mx-auto px-4 py-12 max-w-3xl">
+    <div class="flex justify-center items-center mb-12">
+        <h1 class="text-5xl font-extrabold text-blue-600">Harmony Converter</h1>
+    </div>
+
+    @if (TempData["Error"] != null) {
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r">
+            <p class="font-bold">Error</p>
+            <p>@TempData["Error"]</p>
+        </div>
+    }
+
+    <div class="bg-white shadow-2xl rounded-lg p-8">
+        <form asp-controller="Home" asp-action="Convert" method="post" enctype="multipart/form-data" class="space-y-8">
+            <div>
+                <label class="block text-gray-700 text-lg font-semibold mb-3">Select Image</label>
+                <div class="relative">
+                    <input type="file" name="file" accept=".png,.jpg,.jpeg,.hag,.bmp,.webp,.qoi"
+                           class="hidden" id="fileInput">
+                    <label for="fileInput" class="w-full flex items-center justify-between px-4 py-3 border-2 border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer transition duration-200 bg-white">
+                        <span class="text-gray-500" id="fileName">No file chosen</span>
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-700 text-lg font-semibold mb-3">Convert To</label>
+                <div class="relative">
+                    <select name="targetFormat"
+                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 bg-white">
+                        <option value="png">PNG</option>
+                        <option value="jpg">JPEG</option>
+                        <option value="hag">HAG</option>
+                        <option value="bmp">BMP</option>
+                        <option value="webp">WEBP</option>
+                        <option value="qoi">QOI</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 transform">
+                Convert Image
+            </button>
+        </form>
+    </div>
+
+    <div class="mt-12 text-center text-gray-600">
+        <p class="text-lg">Supported formats: PNG, JPEG, HAG, BMP, WEBP, QOI</p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        var fileName = e.target.files[0] ? e.target.files[0].name : 'No file chosen';
+        document.getElementById('fileName').textContent = fileName;
+    });
+</script>

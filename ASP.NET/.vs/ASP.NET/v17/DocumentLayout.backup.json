@@ -1,16 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}|ConsoleApp\\ConsoleApp.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\consoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2ADCD411-D91F-49D8-8C3B-C878F4591CCB}|ConsoleApp\\ConsoleApp.csproj|solutionrelative:consoleapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}|ImageProcessing\\ImageProcessing.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\imageprocessing\\serializers\\factory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}|ImageProcessing\\ImageProcessing.csproj|solutionrelative:imageprocessing\\serializers\\factory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -18,37 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Factory.cs",
-              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ImageProcessing\\Serializers\\Factory.cs",
-              "RelativeDocumentMoniker": "ImageProcessing\\Serializers\\Factory.cs",
-              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ImageProcessing\\Serializers\\Factory.cs",
-              "RelativeToolTip": "ImageProcessing\\Serializers\\Factory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAUwAwAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T10:41:49.414Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ConsoleApp\\Program.cs",
-              "RelativeDocumentMoniker": "ConsoleApp\\Program.cs",
-              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ConsoleApp\\Program.cs",
-              "RelativeToolTip": "ConsoleApp\\Program.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAAoAAAAjAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T10:23:02.29Z",
-              "EditorCaption": ""
             }
           ]
         }

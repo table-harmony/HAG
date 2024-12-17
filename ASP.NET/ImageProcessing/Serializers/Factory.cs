@@ -8,6 +8,9 @@ public class SerializerFactory {
             SupportedImageFormats.Png => new PngSerializer(),
             SupportedImageFormats.Hag => new HagSerializer(),
             SupportedImageFormats.Jpeg => new JpegSerializer(),
+            SupportedImageFormats.Bmp => new BmpSerializer(),
+            SupportedImageFormats.Webp => new WebpSerializer(),
+            SupportedImageFormats.Qoi => new QoiSerializer(),
             _ => throw new ArgumentException($"Unsupported format: {format}")
         };
     }
@@ -17,4 +20,7 @@ public enum SupportedImageFormats {
     Hag,
     Png,
     Jpeg,
+    Bmp,
+    Webp,
+    Qoi
 }

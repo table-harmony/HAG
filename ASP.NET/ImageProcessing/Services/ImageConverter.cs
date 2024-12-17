@@ -16,7 +16,7 @@ public class ImageConverter {
         return outputPath;
     }
 
-    public static void Convert(string inputPath, string outputPath, SupportedImageFormats inputFormat, SupportedImageFormats outputFormat) {
+    private static void Convert(string inputPath, string outputPath, SupportedImageFormats inputFormat, SupportedImageFormats outputFormat) {
         var inputSerializer = SerializerFactory.Create(inputFormat);
         var outputSerializer = SerializerFactory.Create(outputFormat);
 
@@ -36,6 +36,9 @@ public class ImageConverter {
             ".png" => SupportedImageFormats.Png,
             ".jpg" or ".jpeg" => SupportedImageFormats.Jpeg,
             ".hag" => SupportedImageFormats.Hag,
+            ".bmp" => SupportedImageFormats.Bmp,
+            ".webp" => SupportedImageFormats.Webp,
+            ".qoi" => SupportedImageFormats.Qoi,
             _ => throw new ArgumentException($"Unsupported file extension: {extension}")
         };
     }
