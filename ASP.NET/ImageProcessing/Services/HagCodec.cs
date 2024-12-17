@@ -1,8 +1,16 @@
 ﻿using ImageProcessing.Core;
+using SixLabors.ImageSharp.PixelFormats;
 using static ImageProcessing.Core.Hag;
 
 namespace ImageProcessing.Services;
 
+/// <summary>
+/// Handles encoding and decoding of images to and from the HAG format.
+/// The HAG format uses various compression techniques including:
+/// - Run-length encoding for repeated pixels
+/// - Delta encoding for similar pixels
+/// - Lookup table for frequently used pixels
+/// </summary>
 public class HagCodec {
     private const byte HAG_COPY = 0xc0;
     private const byte HAG_DELTA = 0x40;
@@ -11,8 +19,13 @@ public class HagCodec {
     private const byte HAG_RGB = 0xfe;
     private const byte HAG_RGBA = 0xff;
 
-    private const int UNIQUE_PIXELS_SIZE = 64;
+    private const int UNIQUE_PIXELS_SIZE = 63;
 
+    /// <summary>
+    /// Encodes a SIF (Serialized Image Format) into HAG format
+    /// </summary>
+    /// <param name="source">The source SIF image to encode</param>
+    /// <returns>A HAG formatted image with compressed data</returns>
     public static Hag Encode(Sif source) {
         var result = new Hag {
             Header = new HagHeader() {
@@ -47,9 +60,12 @@ public class HagCodec {
         }
 
         foreach (var currentPixel in source.Body.Pixels) {
+            int currentPixelCode = currentPixel.GetCode() % UNIQUE_PIXELS_SIZE;
+
             if (prevPixel == null) {
                 AddPixel(currentPixel);
                 prevPixel = currentPixel;
+                uniquePixels[currentPixelCode] = currentPixel;
                 continue;
             }
 
@@ -69,14 +85,13 @@ public class HagCodec {
             else {
                 copyCount = 0;
 
-                //int currentPixelCode = currentPixel.GetCode() % UNIQUE_PIXELS_SIZE;
-                //if (uniquePixels[currentPixelCode] == currentPixel) {
-                //    bodyData.Add((byte)(HAG_SET | currentPixelCode));
-                //    prevPixel = currentPixel;
-                //    continue;
-                //} else {
-                //    uniquePixels[currentPixelCode] = currentPixel;
-                //}
+                if (uniquePixels[currentPixelCode] == currentPixel) {
+                    bodyData.Add((byte)(HAG_SET | currentPixelCode));
+                    prevPixel = currentPixel;
+                    continue;
+                } else {
+                    uniquePixels[currentPixelCode] = currentPixel;
+                }
 
                 var deltaPixel = currentPixel - prevPixel;
 
@@ -87,7 +102,8 @@ public class HagCodec {
                         (deltaPixel.Green & 0x03) << 2 |
                         (deltaPixel.Blue & 0x03)
                     ));
-                } else if (IsBigDelta(deltaPixel)) {
+                } 
+                else if (IsBigDelta(deltaPixel)) {
                     bodyData.Add((byte)(
                         HAG_BIG_DELTA |
                         (deltaPixel.Red & 0x3F)
@@ -96,7 +112,8 @@ public class HagCodec {
                         (deltaPixel.Green & 0x1F) << 4 |
                         (deltaPixel.Blue & 0x1F)
                     ));
-                } else {
+                } 
+                else {
                     AddPixel(currentPixel);
                 }
             }
@@ -112,14 +129,19 @@ public class HagCodec {
         delta.Red < 4 && 0 < delta.Red &&
         delta.Green < 4 && 0 < delta.Green &&
         delta.Blue < 4 && 0 < delta.Blue &&
-        delta.Alpha< 4 && 0 < delta.Alpha;
+        delta.Alpha < 16 && 0 < delta.Alpha;
 
     private static bool IsBigDelta(Pixel delta) =>
-        delta.Red < 32 && 0 < delta.Red &&
-        delta.Green < 16 && 0 < delta.Green &&
-        delta.Blue < 16 && 0 < delta.Blue &&
-        delta.Alpha < 32 && 0 < delta.Alpha;
+        delta.Red < 64 && 0 < delta.Red &&
+        delta.Green < 32 && 0 < delta.Green &&
+        delta.Blue < 32 && 0 < delta.Blue &&
+        delta.Alpha < 16 && 0 < delta.Alpha;
 
+    /// <summary>
+    /// Decodes a HAG formatted image back into SIF format
+    /// </summary>
+    /// <param name="source">The HAG formatted image to decode</param>
+    /// <returns>A SIF image containing the uncompressed pixel data</returns>
     public static Sif Decode(Hag source) {
         var result = new Sif {
             Header = source.Header,
@@ -132,7 +154,7 @@ public class HagCodec {
 
         for (int i = 0; i < source.Body.Data.Length; i++) {
             byte currentByte = source.Body.Data[i];
-            byte commandType = (byte)(currentByte & 0b11000000);
+            byte commandType = (byte)(currentByte & 0xC0);
 
             if (currentByte == HAG_RGB) {
                 if (i > source.Body.Data.Length - 4)
@@ -147,6 +169,7 @@ public class HagCodec {
                 i += 3;
 
                 prevPixel = pixels.Last();
+                uniquePixels[prevPixel.GetCode() % UNIQUE_PIXELS_SIZE] = prevPixel;
 
                 continue;
             }
@@ -165,6 +188,7 @@ public class HagCodec {
                 i += 4;
 
                 prevPixel = pixels.Last();
+                uniquePixels[prevPixel.GetCode() % UNIQUE_PIXELS_SIZE] = prevPixel;
 
                 continue;
             }
@@ -214,25 +238,30 @@ public class HagCodec {
                     i++;
                     break;
 
-                //case HAG_SET:
-                //    int currentPixelCode = (byte)(currentByte & 0x3F);
-                //    if (uniquePixels[currentPixelCode] != null) {
-                //        pixels.Add(uniquePixels[currentPixelCode]);
-                //    }
-                //    break;
+                case HAG_SET:
+                    int currentPixelCode = currentByte & 0x3F;
+                    var storedPixel = uniquePixels[currentPixelCode % UNIQUE_PIXELS_SIZE];
+
+                    if (storedPixel != null) {
+                        pixels.Add(new Pixel {
+                            Red = storedPixel.Red,
+                            Green = storedPixel.Green,
+                            Blue = storedPixel.Blue,
+                            Alpha = storedPixel.Alpha
+                        });
+                    }
+                    break;
 
                 default:
                     continue;
             }
 
-            prevPixel = pixels.Last();
+            prevPixel = pixels.LastOrDefault();
 
             if (prevPixel == null)
                 continue;
 
-            //int prevPixelCode = prevPixel.GetCode() % UNIQUE_PIXELS_SIZE;
-            //if (uniquePixels[prevPixelCode] == null)
-            //    uniquePixels[prevPixelCode] = prevPixel;
+            uniquePixels[prevPixel.GetCode() % UNIQUE_PIXELS_SIZE] = prevPixel;
         }
 
         result.Body.Pixels = pixels;

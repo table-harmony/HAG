@@ -2,7 +2,17 @@
 
 namespace ImageProcessing.Serializers;
 
+/// <summary>
+/// Factory for creating image format-specific serializers.
+/// Provides a centralized way to instantiate the appropriate serializer for each supported image format.
+/// </summary>
 public class SerializerFactory {
+    /// <summary>
+    /// Creates a serializer instance for the specified image format
+    /// </summary>
+    /// <param name="format">The image format to create a serializer for</param>
+    /// <returns>A serializer instance that can handle the specified format</returns>
+    /// <exception cref="ArgumentException">Thrown when format is not supported</exception>
     public static ISerializer Create(SupportedImageFormats format) {
         return format switch {
             SupportedImageFormats.Png => new PngSerializer(),
@@ -16,6 +26,9 @@ public class SerializerFactory {
     }
 }
 
+/// <summary>
+/// Enumeration of all supported image formats
+/// </summary>
 public enum SupportedImageFormats {
     Hag,
     Png,

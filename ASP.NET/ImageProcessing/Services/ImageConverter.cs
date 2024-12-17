@@ -2,7 +2,17 @@
 
 namespace ImageProcessing.Services;
 
+/// <summary>
+/// Handles conversion between different image formats using the SIF intermediate format.
+/// Supports conversion between PNG, JPEG, HAG, BMP, WebP and QOI formats.
+/// </summary>
 public class ImageConverter {
+    /// <summary>
+    /// Converts an image file from one format to another
+    /// </summary>
+    /// <param name="inputPath">Path to the source image file</param>
+    /// <param name="outputFormat">Desired output format</param>
+    /// <returns>Path to the converted image file</returns>
     public static string Convert(string inputPath, SupportedImageFormats outputFormat) {
         var inputFormat = GetFormatFromExtension(inputPath);
 
@@ -29,6 +39,12 @@ public class ImageConverter {
         outputStream.CopyTo(fileStream);
     }
 
+    /// <summary>
+    /// Determines the image format from a file extension
+    /// </summary>
+    /// <param name="filePath">Path to the image file</param>
+    /// <returns>The detected image format</returns>
+    /// <exception cref="ArgumentException">Thrown when file extension is not supported</exception>
     public static SupportedImageFormats GetFormatFromExtension(string filePath) {
         var extension = Path.GetExtension(filePath).ToLowerInvariant();
 
