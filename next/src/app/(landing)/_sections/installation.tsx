@@ -8,19 +8,17 @@ import { useState } from "react";
 export function InstallationSection() {
   const [selectedOS, setSelectedOS] = useState<"mac" | "windows">("windows");
 
-  const downloadUrl = {
-    windows: "/downloads/install.ps1",
-    mac: "/downloads/Troll.txt",
-  };
-
   const handleDownload = () => {
     const a = document.createElement("a");
-    a.href = downloadUrl[selectedOS];
-    a.download = selectedOS === "windows" ? "Installer.ps1" : "Troll.txt";
+    a.href =
+      selectedOS === "windows"
+        ? "/downloads/install.ps1"
+        : "/downloads/Troll.txt";
+    a.download =
+      selectedOS === "windows" ? "Hag Viewer Installer.ps1" : "Troll.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    window.location.reload();
   };
 
   return (
