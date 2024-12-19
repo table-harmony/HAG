@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 # Define installation paths and URLs
 $appName = "HagViewer"
 $installDir = "$env:LOCALAPPDATA\$appName"
-$downloadUrl = "https://github.com/tableharmony/HAG/releases/latest/download/HagViewer.exe"
+$downloadUrl = "https://github.com/table-harmony/HAG/releases/latest/download/HagViewer.exe"
 $exePath = "$installDir\HagViewer.exe"
 
 Write-Host "Installing $appName..."
