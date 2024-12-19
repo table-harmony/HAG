@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}|ImageProcessing\\ImageProcessing.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\imageprocessing\\services\\hagcodec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EA520F4B-9BA9-4C7A-A964-EE0B51577F48}|ImageProcessing\\ImageProcessing.csproj|solutionrelative:imageprocessing\\services\\hagcodec.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,24 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "HagCodec.cs",
-              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ImageProcessing\\Services\\HagCodec.cs",
-              "RelativeDocumentMoniker": "ImageProcessing\\Services\\HagCodec.cs",
-              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\ImageProcessing\\Services\\HagCodec.cs",
-              "RelativeToolTip": "ImageProcessing\\Services\\HagCodec.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAgwAwAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-17T16:43:08.017Z",
-              "EditorCaption": ""
             }
           ]
         }
