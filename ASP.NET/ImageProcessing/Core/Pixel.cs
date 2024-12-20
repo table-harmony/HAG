@@ -29,12 +29,12 @@ public class Pixel {
         return !(a == b);
     }
 
-    public override int GetHashCode() {
-        return Red * 3 + Green * 5 + Blue * 7 + Alpha * 11;
-    }
-
     public int GetCode() {
-        return GetHashCode();
+        return (
+            ((Red & 0xF0) << 4) |
+            ((Green & 0xF0)) |
+            ((Blue & 0xF0) >> 4)
+        ) % 63;
     }
 
     public static Pixel operator -(Pixel? a, Pixel? b) {

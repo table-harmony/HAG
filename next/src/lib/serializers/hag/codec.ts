@@ -44,38 +44,11 @@ export class HagCodec {
     let prevPixel: Pixel | null = null;
     let copyCount = 0;
 
-    const addPixel = (pixel: Pixel) => {
-      if (result.header.format === ColorFormat.RGB) {
-        bodyData.push(HAG_RGB);
-      }
-      if (result.header.format === ColorFormat.RGBA) {
-        bodyData.push(HAG_RGBA);
-      }
-
-      bodyData.push(pixel.red);
-      bodyData.push(pixel.green);
-      bodyData.push(pixel.blue);
-
-      if (result.header.format === ColorFormat.RGBA) {
-        bodyData.push(pixel.alpha ?? 255);
-      }
-    };
-
-    const getPixelCode = (pixel: Pixel): number => {
-      return (
-        (pixel.red * 3 +
-          pixel.green * 5 +
-          pixel.blue * 7 +
-          (pixel.alpha ?? 255) * 11) %
-        UNIQUE_PIXELS_SIZE
-      );
-    };
-
     for (const currentPixel of source.body.pixels) {
-      const currentPixelCode = getPixelCode(currentPixel);
+      const currentPixelCode = this.getPixelCode(currentPixel);
 
       if (!prevPixel) {
-        addPixel(currentPixel);
+        this.addPixel(bodyData, currentPixel, source.header.format);
         prevPixel = currentPixel;
         uniquePixels[currentPixelCode] = currentPixel;
         continue;
@@ -85,47 +58,38 @@ export class HagCodec {
         if (copyCount === 0) {
           bodyData.push(0);
         }
-
         copyCount++;
-        bodyData[bodyData.length - 1] = HAG_COPY | copyCount;
+        bodyData[bodyData.length - 1] = HAG_COPY | Math.min(copyCount, 61);
+        if (copyCount === 61) copyCount = 0;
+        continue;
+      }
 
-        if (copyCount === 61) {
-          copyCount = 0;
-        }
+      copyCount = 0;
+      const deltaPixel = this.subtractPixels(currentPixel, prevPixel);
+
+      if (
+        uniquePixels[currentPixelCode] &&
+        this.pixelsEqual(uniquePixels[currentPixelCode]!, currentPixel)
+      ) {
+        bodyData.push(HAG_SET | currentPixelCode);
+      } else if (this.isSmallDelta(deltaPixel)) {
+        bodyData.push(
+          HAG_DELTA |
+            ((deltaPixel.red & 0x03) << 4) |
+            ((deltaPixel.green & 0x03) << 2) |
+            (deltaPixel.blue & 0x03)
+        );
+      } else if (this.isBigDelta(deltaPixel)) {
+        bodyData.push(HAG_BIG_DELTA | (deltaPixel.red & 0x3f));
+        bodyData.push(
+          ((deltaPixel.green & 0x0f) << 4) | (deltaPixel.blue & 0x0f)
+        );
       } else {
-        copyCount = 0;
-
-        if (
-          uniquePixels[currentPixelCode] &&
-          this.pixelsEqual(uniquePixels[currentPixelCode]!, currentPixel)
-        ) {
-          bodyData.push(HAG_SET | currentPixelCode);
-          prevPixel = currentPixel;
-          continue;
-        } else {
-          uniquePixels[currentPixelCode] = currentPixel;
-        }
-
-        const deltaPixel = this.subtractPixels(currentPixel, prevPixel);
-
-        if (this.isSmallDelta(deltaPixel)) {
-          bodyData.push(
-            HAG_DELTA |
-              ((deltaPixel.red & 0x03) << 4) |
-              ((deltaPixel.green & 0x03) << 2) |
-              (deltaPixel.blue & 0x03)
-          );
-        } else if (this.isBigDelta(deltaPixel)) {
-          bodyData.push(HAG_BIG_DELTA | (deltaPixel.red & 0x3f));
-          bodyData.push(
-            ((deltaPixel.green & 0x1f) << 4) | (deltaPixel.blue & 0x1f)
-          );
-        } else {
-          addPixel(currentPixel);
-        }
+        this.addPixel(bodyData, currentPixel, source.header.format);
       }
 
       prevPixel = currentPixel;
+      uniquePixels[currentPixelCode] = this.storePixel(currentPixel);
     }
 
     result.body.data = new Uint8Array(bodyData);
@@ -149,36 +113,19 @@ export class HagCodec {
       const currentByte = source.body.data[i];
       const commandType = currentByte & 0xc0;
 
-      if (currentByte === HAG_RGB) {
-        if (i > source.body.data.length - 4) continue;
+      if (currentByte === HAG_RGB || currentByte === HAG_RGBA) {
+        const isRGBA = currentByte === HAG_RGBA;
+        if (i > source.body.data.length - (isRGBA ? 5 : 4)) continue;
 
         const pixel: Pixel = {
           red: source.body.data[i + 1],
           green: source.body.data[i + 2],
           blue: source.body.data[i + 3],
+          alpha: isRGBA ? source.body.data[i + 4] : undefined,
         };
 
         result.body.pixels.push(pixel);
-        i += 3;
-
-        prevPixel = pixel;
-        uniquePixels[this.getPixelCode(pixel)] = pixel;
-        continue;
-      }
-
-      if (currentByte === HAG_RGBA) {
-        if (i > source.body.data.length - 5) continue;
-
-        const pixel: Pixel = {
-          red: source.body.data[i + 1],
-          green: source.body.data[i + 2],
-          blue: source.body.data[i + 3],
-          alpha: source.body.data[i + 4],
-        };
-
-        result.body.pixels.push(pixel);
-        i += 4;
-
+        i += isRGBA ? 4 : 3;
         prevPixel = pixel;
         uniquePixels[this.getPixelCode(pixel)] = pixel;
         continue;
@@ -190,21 +137,21 @@ export class HagCodec {
         case HAG_COPY: {
           const copyCount = currentByte & 0x3f;
           for (let j = 0; j < copyCount; j++) {
-            result.body.pixels.push({ ...prevPixel });
+            result.body.pixels.push(this.clonePixel(prevPixel));
           }
           break;
         }
 
         case HAG_DELTA: {
           const pixel: Pixel = {
-            red: prevPixel.red + ((currentByte >> 4) & 0x03),
-            green: prevPixel.green + ((currentByte >> 2) & 0x03),
-            blue: prevPixel.blue + (currentByte & 0x03),
+            red: (prevPixel.red + ((currentByte >> 4) & 0x03)) & 0xff,
+            green: (prevPixel.green + ((currentByte >> 2) & 0x03)) & 0xff,
+            blue: (prevPixel.blue + (currentByte & 0x03)) & 0xff,
             alpha: prevPixel.alpha,
           };
           result.body.pixels.push(pixel);
-          prevPixel = pixel;
-          uniquePixels[this.getPixelCode(pixel)] = pixel;
+          prevPixel = { ...pixel };
+          uniquePixels[this.getPixelCode(pixel)] = { ...pixel };
           break;
         }
 
@@ -213,9 +160,9 @@ export class HagCodec {
           const nextByte = source.body.data[i + 1];
 
           const pixel: Pixel = {
-            red: prevPixel.red + (currentByte & 0x3f),
-            green: prevPixel.green + ((nextByte >> 4) & 0x0f),
-            blue: prevPixel.blue + (nextByte & 0x0f),
+            red: (prevPixel.red + (currentByte & 0x3f)) & 0xff,
+            green: (prevPixel.green + ((nextByte >> 4) & 0x0f)) & 0xff,
+            blue: (prevPixel.blue + (nextByte & 0x0f)) & 0xff,
             alpha: prevPixel.alpha,
           };
           result.body.pixels.push(pixel);
@@ -229,8 +176,9 @@ export class HagCodec {
           const currentPixelCode = currentByte & 0x3f;
           const storedPixel = uniquePixels[currentPixelCode];
           if (storedPixel) {
-            result.body.pixels.push({ ...storedPixel });
-            prevPixel = storedPixel;
+            const pixel = { ...storedPixel };
+            result.body.pixels.push(pixel);
+            prevPixel = pixel;
           }
           break;
         }
@@ -241,56 +189,93 @@ export class HagCodec {
   }
 
   private static pixelsEqual(a: Pixel, b: Pixel): boolean {
+    const aAlpha = a.alpha === undefined ? 255 : a.alpha;
+    const bAlpha = b.alpha === undefined ? 255 : b.alpha;
     return (
       a.red === b.red &&
       a.green === b.green &&
       a.blue === b.blue &&
-      (a.alpha ?? 255) === (b.alpha ?? 255)
+      aAlpha === bAlpha
     );
   }
 
   private static subtractPixels(a: Pixel, b: Pixel): Pixel {
     return {
-      red: a.red - b.red,
-      green: a.green - b.green,
-      blue: a.blue - b.blue,
-      alpha: (a.alpha ?? 255) - (b.alpha ?? 255),
+      red: (a.red - b.red) & 0xff,
+      green: (a.green - b.green) & 0xff,
+      blue: (a.blue - b.blue) & 0xff,
+      alpha:
+        a.alpha !== undefined ? (a.alpha - (b.alpha ?? 255)) & 0xff : undefined,
     };
   }
 
   private static isSmallDelta(delta: Pixel): boolean {
     return (
+      0 < delta.red &&
       delta.red < 4 &&
-      delta.red > 0 &&
+      0 < delta.green &&
       delta.green < 4 &&
-      delta.green > 0 &&
+      0 < delta.blue &&
       delta.blue < 4 &&
-      delta.blue > 0 &&
-      (delta.alpha ?? 0) < 16 &&
-      (delta.alpha ?? 0) > 0
+      0 < (delta.alpha ?? 0) &&
+      (delta.alpha ?? 0) < 4
     );
   }
 
   private static isBigDelta(delta: Pixel): boolean {
     return (
+      0 < delta.red &&
       delta.red < 64 &&
-      delta.red > 0 &&
+      0 < delta.green &&
       delta.green < 32 &&
-      delta.green > 0 &&
+      0 < delta.blue &&
       delta.blue < 32 &&
-      delta.blue > 0 &&
-      (delta.alpha ?? 0) < 16 &&
-      (delta.alpha ?? 0) > 0
+      0 < (delta.alpha ?? 0) &&
+      (delta.alpha ?? 0) < 4
     );
   }
 
   private static getPixelCode(pixel: Pixel): number {
     return (
-      (pixel.red * 3 +
-        pixel.green * 5 +
-        pixel.blue * 7 +
-        (pixel.alpha ?? 255) * 11) %
+      (((pixel.red & 0xf0) << 4) |
+        (pixel.green & 0xf0) |
+        ((pixel.blue & 0xf0) >> 4)) %
       UNIQUE_PIXELS_SIZE
     );
+  }
+
+  private static addPixel(
+    bodyData: number[],
+    pixel: Pixel,
+    format: ColorFormat
+  ) {
+    bodyData.push(format === ColorFormat.RGBA ? HAG_RGBA : HAG_RGB);
+    bodyData.push(pixel.red);
+    bodyData.push(pixel.green);
+    bodyData.push(pixel.blue);
+    if (format === ColorFormat.RGBA) {
+      bodyData.push(pixel.alpha ?? 255);
+    }
+  }
+
+  private static clonePixel(pixel: Pixel): Pixel {
+    return {
+      red: pixel.red & 0xff,
+      green: pixel.green & 0xff,
+      blue: pixel.blue & 0xff,
+      alpha: pixel.alpha !== undefined ? pixel.alpha & 0xff : undefined,
+    };
+  }
+
+  private static storePixel(pixel: Pixel): Pixel {
+    const stored = this.clonePixel(pixel);
+    // Ensure values are properly bounded
+    stored.red &= 0xff;
+    stored.green &= 0xff;
+    stored.blue &= 0xff;
+    if (stored.alpha !== undefined) {
+      stored.alpha &= 0xff;
+    }
+    return stored;
   }
 }

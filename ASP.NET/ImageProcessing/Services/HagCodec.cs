@@ -11,6 +11,7 @@ namespace ImageProcessing.Services;
 /// - Delta encoding for similar pixels
 /// - Lookup table for frequently used pixels
 /// </summary>
+/// 
 public class HagCodec {
     private const byte HAG_COPY = 0xc0;
     private const byte HAG_DELTA = 0x40;
@@ -30,7 +31,7 @@ public class HagCodec {
         var result = new Hag {
             Header = new HagHeader() {
                 Width = source.Header.Width,
-                Height = source.Header.Height,  
+                Height = source.Header.Height,
                 Format = source.Header.Format,
             },
             Body = new HagBody()
@@ -40,24 +41,6 @@ public class HagCodec {
         var uniquePixels = new Pixel[UNIQUE_PIXELS_SIZE];
         Pixel? prevPixel = null;
         int copyCount = 0;
-
-        void AddPixel(Pixel pixel) {
-            if (pixel == null) {
-                return;
-            }
-
-            if (result.Header.Format == ColorFormat.RGB)
-                bodyData.Add(HAG_RGB);
-            if (result.Header.Format == ColorFormat.RGBA)
-                bodyData.Add(HAG_RGBA);
-
-            bodyData.Add((byte)pixel.Red);
-            bodyData.Add((byte)pixel.Green);
-            bodyData.Add((byte)pixel.Blue);
-
-            if (result.Header.Format == ColorFormat.RGBA)
-                bodyData.Add((byte)pixel.Alpha);
-        }
 
         foreach (var currentPixel in source.Body.Pixels) {
             int currentPixelCode = currentPixel.GetCode() % UNIQUE_PIXELS_SIZE;
@@ -69,73 +52,64 @@ public class HagCodec {
                 continue;
             }
 
-            if (prevPixel == currentPixel) {
+            if (prevPixel.Equals(currentPixel)) {
                 if (copyCount == 0) {
                     bodyData.Add(new byte());
                 }
-
                 copyCount++;
-
-                bodyData[^1] = (byte)(HAG_COPY | copyCount);
-
-                if (copyCount == 61) {
-                    copyCount = 0;
-                }
+                bodyData[^1] = (byte)(HAG_COPY | Math.Min(copyCount, 61));
+                if (copyCount == 61) copyCount = 0;
+                continue;
             }
-            else {
-                copyCount = 0;
 
-                if (uniquePixels[currentPixelCode] == currentPixel) {
-                    bodyData.Add((byte)(HAG_SET | currentPixelCode));
-                    prevPixel = currentPixel;
-                    continue;
-                } else {
-                    uniquePixels[currentPixelCode] = currentPixel;
-                }
+            copyCount = 0;
+            var deltaPixel = currentPixel - prevPixel;
 
-                var deltaPixel = currentPixel - prevPixel;
+            if (uniquePixels[currentPixelCode]?.Equals(currentPixel) == true) {
+                bodyData.Add((byte)(HAG_SET | currentPixelCode));
+            }
 
-                if (IsSmallDelta(deltaPixel)) {
-                    bodyData.Add((byte)(
-                        HAG_DELTA |
-                        (deltaPixel.Red & 0x03) << 4 |
-                        (deltaPixel.Green & 0x03) << 2 |
-                        (deltaPixel.Blue & 0x03)
-                    ));
-                } 
-                else if (IsBigDelta(deltaPixel)) {
-                    bodyData.Add((byte)(
-                        HAG_BIG_DELTA |
-                        (deltaPixel.Red & 0x3F)
-                    ));
-                    bodyData.Add((byte)(
-                        (deltaPixel.Green & 0x1F) << 4 |
-                        (deltaPixel.Blue & 0x1F)
-                    ));
-                } 
-                else {
-                    AddPixel(currentPixel);
-                }
+            else if (0 < deltaPixel.Red && deltaPixel.Red < 4 &&
+                     0 < deltaPixel.Green && deltaPixel.Green < 4 &&
+                     0 < deltaPixel.Blue && deltaPixel.Blue < 4 && 
+                     0 < deltaPixel.Alpha && deltaPixel.Alpha < 4) {
+                bodyData.Add((byte)(
+                    HAG_DELTA |
+                    ((deltaPixel.Red & 0x03) << 4) |
+                    ((deltaPixel.Green & 0x03) << 2) |
+                    (deltaPixel.Blue & 0x03)
+                ));
+            }
+
+            else if (0 < deltaPixel.Red && deltaPixel.Red < 64 &&
+                     0 < deltaPixel.Green && deltaPixel.Green < 32 &&
+                     0 < deltaPixel.Blue && deltaPixel.Blue < 32 &&
+                     0 < deltaPixel.Alpha && deltaPixel.Alpha < 4) {
+                bodyData.Add((byte)(HAG_BIG_DELTA | (deltaPixel.Red & 0x3F)));
+                bodyData.Add((byte)(
+                    ((deltaPixel.Green & 0x0F) << 4) |
+                    (deltaPixel.Blue & 0x0F)
+                ));
+            } else {
+                AddPixel(currentPixel);
             }
 
             prevPixel = currentPixel;
+            uniquePixels[currentPixelCode] = currentPixel;
         }
 
         result.Body.Data = [.. bodyData];
         return result;
+
+        void AddPixel(Pixel pixel) {
+            bodyData.Add(source.Header.Format == ColorFormat.RGBA ? HAG_RGBA : HAG_RGB);
+            bodyData.Add((byte)pixel.Red);
+            bodyData.Add((byte)pixel.Green);
+            bodyData.Add((byte)pixel.Blue);
+            if (source.Header.Format == ColorFormat.RGBA)
+                bodyData.Add((byte)pixel.Alpha);
+        }
     }
-
-    private static bool IsSmallDelta(Pixel delta) =>
-        delta.Red < 4 && 0 < delta.Red &&
-        delta.Green < 4 && 0 < delta.Green &&
-        delta.Blue < 4 && 0 < delta.Blue &&
-        delta.Alpha < 16 && 0 < delta.Alpha;
-
-    private static bool IsBigDelta(Pixel delta) =>
-        delta.Red < 64 && 0 < delta.Red &&
-        delta.Green < 32 && 0 < delta.Green &&
-        delta.Blue < 32 && 0 < delta.Blue &&
-        delta.Alpha < 16 && 0 < delta.Alpha;
 
     /// <summary>
     /// Decodes a HAG formatted image back into SIF format
