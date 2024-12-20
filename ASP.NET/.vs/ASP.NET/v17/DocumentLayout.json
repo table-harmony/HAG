@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{EE7423EE-C5D1-45D5-9682-CC6D2DDBE175}|WinFormsApp\\WinFormsApp.csproj|c:\\users\\liron\\school\\projects\\hag\\asp.net\\winformsapp\\winformsapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{EE7423EE-C5D1-45D5-9682-CC6D2DDBE175}|WinFormsApp\\WinFormsApp.csproj|solutionrelative:winformsapp\\winformsapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,24 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{fbcae063-e2c0-4ab1-a516-996ea3dafb72}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "WinFormsApp",
-              "DocumentMoniker": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\WinFormsApp\\WinFormsApp.csproj",
-              "RelativeDocumentMoniker": "WinFormsApp\\WinFormsApp.csproj",
-              "ToolTip": "C:\\Users\\liron\\School\\projects\\HAG\\ASP.NET\\WinFormsApp\\WinFormsApp.csproj",
-              "RelativeToolTip": "WinFormsApp\\WinFormsApp.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-12-19T15:56:59.551Z",
-              "EditorCaption": ""
             }
           ]
         }

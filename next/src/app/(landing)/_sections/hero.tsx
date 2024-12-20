@@ -6,32 +6,29 @@ import Link from "next/link";
 
 export function HeroSection() {
   return (
-    <section className="container px-4 py-16 md:py-24 lg:py-32">
+    <section className="container px-4 py-12 md:py-16 lg:py-28">
       <div className="flex gap-10 flex-col lg:flex-row justify-center items-center max-w-[1000px] mx-auto">
         <div className="flex flex-col gap-6 text-center lg:text-left">
-          <div className="inline-flex h-8 items-center rounded-full border px-4 text-sm font-semibold self-center lg:self-start">
-            What is Harmony?
+          <div className="inline-flex h-8 items-center rounded-full border px-4 text-sm font-semibold self-center lg:self-start bg-primary text-primary-foreground">
+            Discover Harmony
           </div>
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight">
-              Convert
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              Simplify Your
               <br />
-              Harmony
+              Image Workflow
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground text-balance max-w-[600px] mx-auto lg:mx-0">
+            <p className="text-base md:text-lg text-muted-foreground text-balance max-w-[350px] mx-auto lg:mx-0">
               {siteConfig.description}
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <Button
-              asChild
-              className="h-11 px-8 bg-[#00DC82] text-black hover:bg-[#00DC82]/90"
-            >
+            <Button asChild className="h-11 px-8">
               <Link href="/convert">
                 Get Started <ChevronRightIcon className="ml-2 h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild className="h-11 px-8">
+            <Button asChild className="h-11 px-8" variant="outline">
               <Link
                 href={siteConfig.links.github}
                 target="_blank"

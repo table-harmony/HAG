@@ -1,11 +1,13 @@
+"use client";
+
 import { ImageConverter } from "@/components/image-converter";
 import { api } from "../../../convex/_generated/api";
-import { fetchQuery } from "convex/nextjs";
 import { formatNumber } from "@/lib/format";
 import { formatFileSize } from "@/lib/format";
+import { useQuery } from "convex/react";
 
-export default async function ConverterPage() {
-  const data = await fetchQuery(api.data.getData);
+export default function ConverterPage() {
+  const data = useQuery(api.data.getData);
 
   return (
     <div className="flex flex-col items-center justify-center">

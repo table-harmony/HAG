@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Zap } from "lucide-react";
 import Link from "next/link";
 
 export function EnterpriseSection() {
   return (
     <section className="container px-4 py-16 md:py-24">
       <Card className="max-w-[500px] mx-auto p-8 space-y-6">
-        <div className="inline-flex h-6 items-center rounded-full bg-[#00DC82] px-3 text-sm font-medium text-black">
+        <div className="inline-flex h-8 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground">
+          <Zap className="mr-2 h-4 w-4" />
           New
         </div>
         <div className="space-y-2">
@@ -19,14 +20,9 @@ export function EnterpriseSection() {
             Convert your images to any format for free
           </p>
         </div>
-        <Button
-          asChild
-          size="lg"
-          className="group bg-[#00DC82] text-black hover:bg-[#00DC82]/90"
-        >
-          <Link href="/">
-            Get started{" "}
-            <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+        <Button asChild size="lg">
+          <Link href="/convert">
+            Get started <ChevronRight className="h-4 w-4" />
           </Link>
         </Button>
       </Card>

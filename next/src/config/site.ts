@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "ConvertHarmony",
   url: "https://convertharmony.vercel.app",
-  title: "HarmonyConvert",
+  title: "ConvertHarmony",
   description:
-    "HarmonyConvert is a free online image converter that allows you to convert images to various formats.",
+    "ConvertHarmony is a free online tool for converting images to various formats.",
   links: {
     github: "https://github.com/table-harmony/HAG",
     linkedin:

@@ -17,7 +17,7 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
   title: siteConfig.name,
   metadataBase: new URL(siteConfig.url),
-  description: siteConfig.description,
+  description: "ConvertHarmony - Convert your images to various formats.",
 };
 
 export const viewport: Viewport = {

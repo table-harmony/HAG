@@ -39,6 +39,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: "Conversion failed" }, { status: 500 });
   }
 }

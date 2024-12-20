@@ -19,13 +19,9 @@ type FileWithFormat = {
   format: SupportedFormat | null;
 };
 
-const supportedFormats: SupportedFormat[] = [
-  "png",
-  "jpg",
-  "jpeg",
-  "webp",
-  "hag",
-];
+const supportedFormats: SupportedFormat[] = ["png", "jpg", "webp", "hag"];
+
+const MAX_FILES = 5;
 
 export function ImageConverter() {
   const [files, setFiles] = useState<FileWithFormat[]>([]);
@@ -33,32 +29,37 @@ export function ImageConverter() {
   const [progress, setProgress] = useState(0);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let files = Array.from(e.target.files || []);
+    let selectedFiles = Array.from(e.target.files || []);
 
-    if (files.length === 0) {
+    if (selectedFiles.length === 0) {
       setFiles([]);
       return;
     }
 
-    files.forEach((file) => {
-      try {
-        const format = file.name.split(".")[1] as SupportedFormat;
+    if (selectedFiles.length + files.length > MAX_FILES) {
+      toast.error(`You can only upload up to ${MAX_FILES} files at a time.`);
+      return;
+    }
 
-        if (!supportedFormats.includes(format)) {
+    selectedFiles.forEach((file) => {
+      try {
+        const format = getFormat(file);
+
+        if (!isSupportedFormat(format)) {
           throw new Error("Unsupported format");
         }
       } catch (err) {
         toast.error(`Cannot read file ${file.name}`);
-        files = files.filter((f) => f !== file);
+        selectedFiles = selectedFiles.filter((f) => f !== file);
       }
     });
 
-    const newFiles = files.map((file) => ({
+    const newFiles = selectedFiles.map((file) => ({
       file,
-      format: file.name.split(".")[1] as SupportedFormat,
+      format: getFormat(file),
     }));
 
-    setFiles((prev) => [...prev, ...newFiles]);
+    setFiles((prev) => [...prev, ...newFiles].slice(0, MAX_FILES));
   };
 
   const handleFormatChange = (index: number, format: SupportedFormat) => {
@@ -114,7 +115,9 @@ export function ImageConverter() {
       const zip = new JSZip();
       convertedFiles.forEach((file) => {
         zip.file(file.name, file.blob);
-        setFiles((prev) => prev.filter((f) => f.file.name !== file.name));
+        setFiles((prev) =>
+          prev.filter((f) => f.file.stream !== file.blob.stream)
+        );
       });
       const content = await zip.generateAsync({ type: "blob" });
 
@@ -219,7 +222,7 @@ export function ImageConverter() {
       <Button
         onClick={handleConvert}
         disabled={files.length === 0 || converting}
-        className="w-full"
+        className="w-full select-none"
       >
         {converting ? (
           <FileType className="mr-2 h-4 w-4 animate-spin" />
@@ -230,4 +233,15 @@ export function ImageConverter() {
       </Button>
     </div>
   );
+}
+
+function isSupportedFormat(format: string): format is SupportedFormat {
+  if (format === "jpeg") return true;
+  return supportedFormats.includes(format as SupportedFormat);
+}
+
+function getFormat(file: File): SupportedFormat {
+  const format = file.name.split(".").pop();
+  if (format === "jpeg") return "jpg";
+  return format as SupportedFormat;
 }

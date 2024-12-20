@@ -12,13 +12,13 @@ export function InstallationSection() {
     const a = document.createElement("a");
     a.href =
       selectedOS === "windows"
-        ? "/downloads/install.ps1"
+        ? "/downloads/HagViewer.exe"
         : "/downloads/Troll.txt";
-    a.download =
-      selectedOS === "windows" ? "Hag Viewer Installer.ps1" : "Troll.txt";
+    a.download = selectedOS === "windows" ? "Hag Viewer.exe" : "Troll.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+    window.location.reload();
   };
 
   return (
@@ -37,14 +37,14 @@ export function InstallationSection() {
           <Button
             variant={selectedOS === "mac" ? "default" : "outline"}
             onClick={() => setSelectedOS("mac")}
-            className={`rounded-full ${selectedOS === "mac" ? "text-green-300" : ""}`}
+            className="rounded-full"
           >
             MacOS/Linux
           </Button>
           <Button
             variant={selectedOS === "windows" ? "default" : "outline"}
             onClick={() => setSelectedOS("windows")}
-            className={`rounded-full ${selectedOS === "windows" ? "text-green-300" : ""}`}
+            className="rounded-full"
           >
             Windows
           </Button>
