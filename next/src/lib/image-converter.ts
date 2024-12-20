@@ -1,10 +1,10 @@
 import { SerializerFactory } from "./serializers/factory";
-import { SupportedFormat } from "./types";
+import { SupportedImageFormat } from "./types";
 
 export class ImageConverter {
   static async convert(
     file: File,
-    targetFormat: SupportedFormat
+    targetFormat: SupportedImageFormat
   ): Promise<Blob> {
     try {
       const sourceFormat = this.getFormatFromExtension(file.name);
@@ -19,11 +19,11 @@ export class ImageConverter {
     }
   }
 
-  static getFormatFromExtension(filename: string): SupportedFormat {
+  static getFormatFromExtension(filename: string): SupportedImageFormat {
     const ext = filename.split(".").pop()?.toLowerCase();
     if (!ext || !["png", "jpg", "jpeg", "webp", "hag"].includes(ext)) {
       throw new Error("Unsupported format");
     }
-    return ext as SupportedFormat;
+    return ext as SupportedImageFormat;
   }
 }

@@ -25,7 +25,7 @@ export interface SIF {
   body: ImageBody;
 }
 
-export type SupportedFormat = "png" | "jpg" | "jpeg" | "webp" | "hag";
+export type SupportedImageFormat = "png" | "jpg" | "jpeg" | "webp" | "hag";
 
 export interface ISerializer {
   serialize(source: Blob): Promise<SIF>;

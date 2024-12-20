@@ -15,9 +15,9 @@ const fontSans = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: siteConfig.name,
+  title: "Conify - Convert your files to various formats.",
   metadataBase: new URL(siteConfig.url),
-  description: "ConvertHarmony - Convert your images to various formats.",
+  description: siteConfig.description,
 };
 
 export const viewport: Viewport = {

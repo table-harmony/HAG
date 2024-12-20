@@ -6,7 +6,7 @@ import { siteConfig } from "@/config/site";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-background py-8 lg:py-12 flex justify-center">
+    <footer className="border-t bg-background lg:px-8 py-8 lg:py-12 flex justify-center">
       <div className="container flex flex-col lg:flex-row lg:h-14 items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
@@ -21,7 +21,7 @@ export function Footer() {
           </Button>
         </div>
 
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-sm text-muted-foreground text-center text-balance">
           Copyright © {new Date().getFullYear()} Table Harmony. All rights
           reserved.
         </p>

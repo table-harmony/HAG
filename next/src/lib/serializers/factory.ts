@@ -1,4 +1,4 @@
-import { ISerializer, SupportedFormat } from "../types";
+import { ISerializer, SupportedImageFormat } from "../types";
 
 import { PngSerializer } from "./png-serializer";
 import { JpegSerializer } from "./jpeg-serializer";
@@ -6,7 +6,7 @@ import { WebpSerializer } from "./webp-serializer";
 import { HagSerializer } from "./hag/serializer";
 
 export class SerializerFactory {
-  static create(format: SupportedFormat): ISerializer {
+  static create(format: SupportedImageFormat): ISerializer {
     switch (format) {
       case "png":
         return new PngSerializer();

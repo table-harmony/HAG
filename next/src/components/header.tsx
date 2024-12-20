@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, UploadCloud } from "lucide-react";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
 export function Header() {
   const pathname = usePathname();
@@ -15,21 +16,20 @@ export function Header() {
       <div className="container px-4 md:px-16 flex h-14 items-center">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <ImageIcon className="w-6 h-6" />
-            <span className="hidden font-bold sm:inline-block">Harmony</span>
+            <UploadCloud className="w-6 h-6" />
+            <span className="hidden font-bold sm:inline-block">
+              {siteConfig.name}
+            </span>
           </Link>
           <nav className="flex items-center gap-2">
             <Button
               asChild
-              variant={isActive("/convert") ? "secondary" : "ghost"}
+              variant={isActive("/convert/images") ? "secondary" : "ghost"}
             >
-              <Link href="/convert">Convert</Link>
-            </Button>
-            <Button
-              asChild
-              variant={isActive("/specification") ? "secondary" : "ghost"}
-            >
-              <Link href="/specification">Specification</Link>
+              <Link href="/convert/images">
+                <ImageIcon className="w-4 h-4" />
+                Images
+              </Link>
             </Button>
           </nav>
         </div>

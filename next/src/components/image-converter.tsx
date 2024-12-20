@@ -10,71 +10,71 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Upload, FileType, CheckCircle2, Trash2 } from "lucide-react";
-import { SupportedFormat } from "@/lib/types";
+import { Upload, CheckCircle2, Trash2, ImageUpIcon } from "lucide-react";
+import { SupportedImageFormat } from "@/lib/types";
 import { toast } from "sonner";
 
-type FileWithFormat = {
-  file: File;
-  format: SupportedFormat | null;
+type ImageWithFormat = {
+  image: File;
+  format: SupportedImageFormat | null;
 };
 
-const supportedFormats: SupportedFormat[] = ["png", "jpg", "webp", "hag"];
+const supportedFormats: SupportedImageFormat[] = ["png", "jpg", "webp", "hag"];
 
-const MAX_FILES = 5;
+const MAX_IMAGES = 5;
 
 export function ImageConverter() {
-  const [files, setFiles] = useState<FileWithFormat[]>([]);
+  const [images, setImages] = useState<ImageWithFormat[]>([]);
   const [converting, setConverting] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let selectedFiles = Array.from(e.target.files || []);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let selectedImages = Array.from(e.target.files || []);
 
-    if (selectedFiles.length === 0) {
-      setFiles([]);
+    if (selectedImages.length === 0) {
+      setImages([]);
       return;
     }
 
-    if (selectedFiles.length + files.length > MAX_FILES) {
-      toast.error(`You can only upload up to ${MAX_FILES} files at a time.`);
-      return;
+    if (selectedImages.length + images.length > MAX_IMAGES) {
+      toast.error(`You can only upload up to ${MAX_IMAGES} images at a time.`);
     }
 
-    selectedFiles.forEach((file) => {
+    selectedImages.forEach((image) => {
       try {
-        const format = getFormat(file);
+        const format = getFormat(image);
 
         if (!isSupportedFormat(format)) {
           throw new Error("Unsupported format");
         }
       } catch (err) {
-        toast.error(`Cannot read file ${file.name}`);
-        selectedFiles = selectedFiles.filter((f) => f !== file);
+        toast.error(`Cannot read image ${image.name}`);
+        selectedImages = selectedImages.filter((f) => f !== image);
       }
     });
 
-    const newFiles = selectedFiles.map((file) => ({
-      file,
-      format: getFormat(file),
+    const newImages = selectedImages.map((image) => ({
+      image,
+      format: getFormat(image),
     }));
 
-    setFiles((prev) => [...prev, ...newFiles].slice(0, MAX_FILES));
+    setImages((prev) => [...prev, ...newImages].slice(0, MAX_IMAGES));
   };
 
-  const handleFormatChange = (index: number, format: SupportedFormat) => {
-    setFiles((prev) =>
+  const handleFormatChange = (index: number, format: SupportedImageFormat) => {
+    setImages((prev) =>
       prev.map((item, i) => (i === index ? { ...item, format } : item))
     );
   };
 
-  const handleRemoveFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+  const handleRemoveImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleConvert = async () => {
-    const filesToConvert = files.filter((f) => f.format !== null);
-    if (filesToConvert.length === 0) {
+    const imagesToConvert = images.filter((f) => f.format !== null);
+
+    if (imagesToConvert.length === 0) {
       toast.error(
         "Please select at least one file and choose a conversion format."
       );
@@ -85,14 +85,16 @@ export function ImageConverter() {
     setProgress(0);
 
     try {
-      const convertedFiles = [];
-      for (let i = 0; i < filesToConvert.length; i++) {
-        const { file, format } = filesToConvert[i];
+      const convertedImages = [];
+
+      for (let i = 0; i < imagesToConvert.length; i++) {
+        const { image: file, format } = imagesToConvert[i];
+
         const formData = new FormData();
         formData.append("file", file);
         formData.append("targetFormat", format as string);
 
-        const response = await fetch("/api/convert", {
+        const response = await fetch("/api/convert/images", {
           method: "POST",
           body: formData,
         });
@@ -102,21 +104,21 @@ export function ImageConverter() {
         }
 
         const blob = await response.blob();
-        convertedFiles.push({
+        convertedImages.push({
           name: `${file.name.split(".")[0]}.${format}`,
           blob,
         });
 
-        setProgress(((i + 1) / filesToConvert.length) * 100);
+        setProgress(((i + 1) / imagesToConvert.length) * 100);
       }
 
       // Create a zip file containing all converted files
       const JSZip = (await import("jszip")).default;
       const zip = new JSZip();
-      convertedFiles.forEach((file) => {
-        zip.file(file.name, file.blob);
-        setFiles((prev) =>
-          prev.filter((f) => f.file.stream !== file.blob.stream)
+      convertedImages.forEach((image) => {
+        zip.file(image.name, image.blob);
+        setImages((prev) =>
+          prev.filter((f) => f.image.stream !== image.blob.stream)
         );
       });
       const content = await zip.generateAsync({ type: "blob" });
@@ -131,7 +133,9 @@ export function ImageConverter() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success(`Successfully converted ${filesToConvert.length} file(s).`);
+      toast.success(
+        `Successfully converted ${imagesToConvert.length} image(s).`
+      );
     } catch (err) {
       console.error(err);
       toast.error("An error occurred during the conversion process.");
@@ -162,27 +166,27 @@ export function ImageConverter() {
             id="fileInput"
             type="file"
             className="hidden"
-            onChange={handleFileChange}
+            onChange={handleImageChange}
             accept=".png,.jpg,.jpeg,.hag,.bmp,.webp,.qoi"
             multiple
           />
         </label>
       </div>
 
-      {files.length > 0 && (
+      {images.length > 0 && (
         <div className="space-y-4">
           <h3 className="font-semibold">Selected Files:</h3>
           <ul className="space-y-2">
-            {files.map((file, index) => (
+            {images.map((file, index) => (
               <li
                 key={index}
                 className="flex items-center space-x-2 border rounded-md p-3"
               >
-                <span className="flex-grow truncate">{file.file.name}</span>
+                <span className="flex-grow truncate">{file.image.name}</span>
                 <Select
                   defaultValue={file.format || "png"}
                   onValueChange={(value) =>
-                    handleFormatChange(index, value as SupportedFormat)
+                    handleFormatChange(index, value as SupportedImageFormat)
                   }
                 >
                   <SelectTrigger className="w-[180px]">
@@ -199,8 +203,8 @@ export function ImageConverter() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleRemoveFile(index)}
-                  aria-label={`Remove ${file.file.name}`}
+                  onClick={() => handleRemoveImage(index)}
+                  aria-label={`Remove ${file.image.name}`}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -221,11 +225,11 @@ export function ImageConverter() {
 
       <Button
         onClick={handleConvert}
-        disabled={files.length === 0 || converting}
+        disabled={images.length === 0 || converting}
         className="w-full select-none"
       >
         {converting ? (
-          <FileType className="mr-2 h-4 w-4 animate-spin" />
+          <ImageUpIcon className="mr-2 h-4 w-4 animate-spin" />
         ) : (
           <CheckCircle2 className="mr-2 h-4 w-4" />
         )}
@@ -235,13 +239,13 @@ export function ImageConverter() {
   );
 }
 
-function isSupportedFormat(format: string): format is SupportedFormat {
+function isSupportedFormat(format: string): format is SupportedImageFormat {
   if (format === "jpeg") return true;
-  return supportedFormats.includes(format as SupportedFormat);
+  return supportedFormats.includes(format as SupportedImageFormat);
 }
 
-function getFormat(file: File): SupportedFormat {
+function getFormat(file: File): SupportedImageFormat {
   const format = file.name.split(".").pop();
   if (format === "jpeg") return "jpg";
-  return format as SupportedFormat;
+  return format as SupportedImageFormat;
 }

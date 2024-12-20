@@ -1,9 +1,9 @@
 export const siteConfig = {
-  name: "ConvertHarmony",
-  url: "https://convertharmony.vercel.app",
-  title: "ConvertHarmony",
+  name: "Conify",
+  url: "https://conify.vercel.app",
+  title: "Conify",
   description:
-    "ConvertHarmony is a free online tool for converting images to various formats.",
+    "Conify is a free online tool for converting files to various formats.",
   links: {
     github: "https://github.com/table-harmony/HAG",
     linkedin:

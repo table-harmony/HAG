@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { siteConfig } from "@/config/site";
-import { ChevronRight, Zap } from "lucide-react";
+import { ChevronRight, FileIcon, ImageIcon, Zap } from "lucide-react";
 import Link from "next/link";
 
 export function EnterpriseSection() {
@@ -14,17 +14,20 @@ export function EnterpriseSection() {
         </div>
         <div className="space-y-2">
           <h2 className="text-3xl font-semibold tracking-tight">
-            Convert Harmony
+            {siteConfig.name}
           </h2>
           <p className="text-muted-foreground text-lg">
-            Convert your images to any format for free
+            {siteConfig.description}
           </p>
         </div>
-        <Button asChild size="lg">
-          <Link href="/convert">
-            Get started <ChevronRight className="h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex w-full flex-col md:flex-row justify-center gap-4">
+          <Button asChild size="lg" className="w-full">
+            <Link href="/convert/images">
+              <ImageIcon className="h-4 w-4" />
+              Images
+            </Link>
+          </Button>
+        </div>
       </Card>
     </section>
   );

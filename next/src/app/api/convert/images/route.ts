@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { ImageConverter } from "@/lib/converter";
-import { SupportedFormat } from "@/lib/types";
+import { SupportedImageFormat } from "@/lib/types";
+import { ImageConverter } from "@/lib/image-converter";
+
 import { fetchMutation } from "convex/nextjs";
-import { api } from "../../../../convex/_generated/api";
+import { api } from "../../../../../convex/_generated/api";
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    const targetFormat = formData.get("targetFormat") as SupportedFormat;
+    const targetFormat = formData.get("targetFormat") as SupportedImageFormat;
 
     if (!file || !targetFormat) {
       return NextResponse.json(
@@ -20,11 +21,11 @@ export async function POST(req: NextRequest) {
 
     const fileBlob = await ImageConverter.convert(
       file,
-      targetFormat as SupportedFormat
+      targetFormat as SupportedImageFormat
     );
 
     try {
-      await fetchMutation(api.data.updateData, {
+      await fetchMutation(api.data.updateImageData, {
         size: fileBlob.size,
         count: 1,
       });

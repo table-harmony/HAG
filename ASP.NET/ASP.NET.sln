@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageProcessing", "ImagePro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoreApp", "CoreApp\CoreApp.csproj", "{87185472-BD3F-4593-8583-4B17CEAD9E24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp", "WinFormsApp\WinFormsApp.csproj", "{EE7423EE-C5D1-45D5-9682-CC6D2DDBE175}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsApp", "WinFormsApp\WinFormsApp.csproj", "{EE7423EE-C5D1-45D5-9682-CC6D2DDBE175}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

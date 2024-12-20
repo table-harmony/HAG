@@ -6,8 +6,8 @@ export default function SpecificationPage() {
       <div className="container px-4 py-8 md:py-12 space-y-10">
         <div className="flex items-center justify-center flex-col">
           <div className="flex flex-col text-center space-y-4 mb-12">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight">
-              Specification
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+              HAG Specification
             </h1>
             <p className="text-lg text-muted-foreground text-balance max-w-[600px]">
               A comprehensive document that outlines the features and

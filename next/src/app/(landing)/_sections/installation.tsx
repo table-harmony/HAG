@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CopyIcon, DownloadIcon } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 export function InstallationSection() {
@@ -29,8 +30,14 @@ export function InstallationSection() {
           <span className="text-muted-foreground font-normal">v1.0.0</span>
         </h2>
         <p className="text-muted-foreground text-balance max-w-[350px] mx-auto">
-          HAG Viewer is a tool to view your Harmonic Advanced Graphics (HAG)
-          files.
+          HAG Viewer is a tool to view your Harmonic Advanced Graphics (
+          <Link
+            className="underline-offset-2 underline"
+            href="/hag-specification"
+          >
+            HAG
+          </Link>
+          ) files.
         </p>
 
         <div className="flex justify-center gap-2">
