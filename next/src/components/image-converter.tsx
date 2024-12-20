@@ -15,6 +15,7 @@ import { SupportedImageFormat } from "@/lib/types";
 import { toast } from "sonner";
 
 type ImageWithFormat = {
+  id: string;
   image: File;
   format: SupportedImageFormat | null;
 };
@@ -54,11 +55,14 @@ export function ImageConverter() {
     });
 
     const newImages = selectedImages.map((image) => ({
+      id: crypto.randomUUID(),
       image,
       format: getFormat(image),
     }));
 
     setImages((prev) => [...prev, ...newImages].slice(0, MAX_IMAGES));
+
+    e.target.value = "";
   };
 
   const handleFormatChange = (index: number, format: SupportedImageFormat) => {
@@ -75,9 +79,7 @@ export function ImageConverter() {
     const imagesToConvert = images.filter((f) => f.format !== null);
 
     if (imagesToConvert.length === 0) {
-      toast.error(
-        "Please select at least one file and choose a conversion format."
-      );
+      toast.error("Please select at least one file.");
       return;
     }
 
@@ -85,45 +87,70 @@ export function ImageConverter() {
     setProgress(0);
 
     try {
-      const convertedImages = [];
+      let completedFiles = 0;
+      const updateProgress = () => {
+        completedFiles++;
+        setProgress((completedFiles / imagesToConvert.length) * 100);
+      };
 
-      for (let i = 0; i < imagesToConvert.length; i++) {
-        const { image: file, format } = imagesToConvert[i];
+      const convertPromises = imagesToConvert.map(
+        async ({ id, image: file, format }) => {
+          try {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("targetFormat", format as string);
 
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("targetFormat", format as string);
+            const response = await fetch("/api/convert/images", {
+              method: "POST",
+              body: formData,
+            });
 
-        const response = await fetch("/api/convert/images", {
-          method: "POST",
-          body: formData,
-        });
+            if (!response.ok) {
+              throw new Error(response.statusText || "Conversion failed");
+            }
 
-        if (!response.ok) {
-          throw new Error(response.statusText || "Conversion failed");
+            const blob = await response.blob();
+            updateProgress();
+
+            return {
+              success: true,
+              name: `${file.name.split(".")[0]}.${format}`,
+              blob,
+              originalName: file.name,
+              id,
+            };
+          } catch (error) {
+            updateProgress();
+            return {
+              success: false,
+              name: file.name,
+            };
+          }
         }
+      );
 
-        const blob = await response.blob();
-        convertedImages.push({
-          name: `${file.name.split(".")[0]}.${format}`,
-          blob,
-        });
+      const results = await Promise.all(convertPromises);
+      const convertedImages = results.filter((r) => r.success) as {
+        name: string;
+        blob: Blob;
+        originalName: string;
+        id: string;
+      }[];
 
-        setProgress(((i + 1) / imagesToConvert.length) * 100);
+      if (convertedImages.length === 0) {
+        toast.error("Failed to convert any images");
+        return;
       }
 
-      // Create a zip file containing all converted files
       const JSZip = (await import("jszip")).default;
       const zip = new JSZip();
+
       convertedImages.forEach((image) => {
         zip.file(image.name, image.blob);
-        setImages((prev) =>
-          prev.filter((f) => f.image.stream !== image.blob.stream)
-        );
+        setImages((prev) => prev.filter((f) => f.id !== image.id));
       });
-      const content = await zip.generateAsync({ type: "blob" });
 
-      // Download the zip file
+      const content = await zip.generateAsync({ type: "blob" });
       const url = URL.createObjectURL(content);
       const a = document.createElement("a");
       a.href = url;
@@ -134,14 +161,13 @@ export function ImageConverter() {
       URL.revokeObjectURL(url);
 
       toast.success(
-        `Successfully converted ${imagesToConvert.length} image(s).`
+        `Successfully converted ${convertedImages.length} out of ${imagesToConvert.length} image(s)`
       );
     } catch (err) {
       console.error(err);
       toast.error("An error occurred during the conversion process.");
     } finally {
       setConverting(false);
-      setProgress(0);
     }
   };
 

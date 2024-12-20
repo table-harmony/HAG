@@ -33,10 +33,14 @@ export class JpegSerializer implements ISerializer {
   }
 
   async deserialize(source: SIF): Promise<Blob> {
-    const data = new Uint8Array(source.body.pixels.length * 3);
+    const pixelCount = source.header.width * source.header.height;
+    const channels = 3;
+    const dataSize = pixelCount * channels;
+
+    const data = new Uint8Array(dataSize);
 
     source.body.pixels.forEach((pixel, index) => {
-      const offset = index * 3;
+      const offset = index * channels;
       data[offset] = pixel.red;
       data[offset + 1] = pixel.green;
       data[offset + 2] = pixel.blue;
@@ -46,7 +50,7 @@ export class JpegSerializer implements ISerializer {
       raw: {
         width: source.header.width,
         height: source.header.height,
-        channels: 3,
+        channels,
       },
     })
       .jpeg()

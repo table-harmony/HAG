@@ -26,7 +26,7 @@ export default function ImageConverterPage() {
           </div>
         </div>
         <ImageConverter />
-        <p className="text-center text-xl font-semibold text-muted-foreground mt-10">
+        <p className="text-center text-lg md:text-xl font-semibold text-muted-foreground mt-10">
           We&apos;ve already converted {formatNumber(data?.count ?? 0)} images
           with a total size of {formatFileSize(data?.size ?? 0)}{" "}
         </p>

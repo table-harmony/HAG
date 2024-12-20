@@ -34,8 +34,11 @@ export class WebpSerializer implements ISerializer {
   }
 
   async deserialize(source: SIF): Promise<Blob> {
+    const pixelCount = source.header.width * source.header.height;
     const channels = source.header.format === ColorFormat.RGB ? 3 : 4;
-    const data = new Uint8Array(source.body.pixels.length * channels);
+    const dataSize = pixelCount * channels;
+
+    const data = new Uint8Array(dataSize);
 
     source.body.pixels.forEach((pixel, index) => {
       const offset = index * channels;

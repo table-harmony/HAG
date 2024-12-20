@@ -12,6 +12,7 @@ export class ImageConverter {
       const targetSerializer = SerializerFactory.create(targetFormat);
 
       const sif = await sourceSerializer.serialize(file);
+
       return await targetSerializer.deserialize(sif);
     } catch (error) {
       console.error("Conversion error:", error);
